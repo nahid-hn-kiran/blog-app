@@ -17,33 +17,20 @@ const createPost = async (req: Request, res: Response) => {
 
 const getPosts = async (req: Request, res: Response) => {
   try {
-    const { search } = req.query;
-    const tags = req.query.tags ? (req.query.tags as string).split(",") : [];
-    const isFeatured = req.query.isFeatured
-      ? req.query.isFeatured === "true"
-        ? true
-        : req.query.isFeatured === "false"
-          ? false
-          : undefined
-      : undefined;
-
+    const search = req.query.search as string | undefined;
+    const tags = req.query.tags ? req.query.tags.toString().split(",") : [];
+    const isFeatured = req.query.isFeatured === "true";
     const status = req.query.status as PostStatus | undefined;
-
     const authorId = req.query.authorId as string | undefined;
 
-    if (search && typeof search === "string") {
-      const posts = await postService.getPosts({
-        search,
-        tags,
-        isFeatured,
-        status,
-        authorId,
-      });
-      return res.json(posts);
-    }
-
-    const posts = await postService.getPosts({});
-    res.json(posts);
+    const result = await postService.getPosts({
+      search,
+      tags,
+      isFeatured,
+      status,
+      authorId,
+    });
+    res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ error: "Failed to get posts" });
   }

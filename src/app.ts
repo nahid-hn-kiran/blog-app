@@ -6,7 +6,12 @@ import { auth } from "./lib/auth";
 
 const app: Application = express();
 
-app.use(cors({ origin: process.env.APP_URL, credentials: true }));
+app.use(
+  cors({
+    origin: process.env.APP_URL || "http://localhost:4000",
+    credentials: true,
+  }),
+);
 
 app.use(express.json());
 
